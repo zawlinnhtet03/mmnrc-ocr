@@ -50,7 +50,7 @@ with col1:
 
         st.image(img, caption="Input Image", use_column_width=True)
 
-        if st.button("Simulate KYC Request"):
+        if st.button("Simulate Request"):
             img_byte_arr = io.BytesIO()
             img.save(img_byte_arr, format="JPEG", quality=85)
             payload = img_byte_arr.getvalue()

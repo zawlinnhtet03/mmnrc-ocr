@@ -12,7 +12,7 @@ st.title("Dinger KYC • API Integration Test")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Client Side (Mobile App)")
+    st.subheader("Client Side")
     uploaded = st.file_uploader("Upload NRC", type=["jpg", "png", "jpeg"])
     
     if uploaded:
@@ -25,7 +25,7 @@ with col1:
             img.save(img_byte_arr, format='JPEG')
             payload = img_byte_arr.getvalue()
             
-            with st.spinner("Sending request to Modal API..."):
+            with st.spinner("Sending request to API..."):
                 try:
                     # THIS IS THE KEY LINE FOR YOUR KYE APP
                     response = requests.post(API_URL, data=payload)

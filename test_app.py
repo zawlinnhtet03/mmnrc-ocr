@@ -1,19 +1,103 @@
-import streamlit as st
-import requests
-from PIL import Image, ImageDraw
 import io
+import os
 import time
 
-# ⚠️ YOUR MODAL API
-API_URL = "https://zawlinnhtet958--burmese-nrc-ocr-backend-api-predict.modal.run"
+import requests
+import streamlit as st
+from PIL import Image, ImageDraw
+from dotenv import load_dotenv
+from supabase import Client, create_client
 
-# Image size limit (important for Streamlit Cloud)
+load_dotenv()
+
+st.set_page_config(page_title="KYC API Tester", layout="wide")
+
+API_URL = os.getenv("API_URL")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
+
+if not API_URL:
+    st.error(
+        "API_URL environment variable is not set. Please configure it before running the app."
+    )
+    st.stop()
+
+if not SUPABASE_URL or not SUPABASE_ANON_KEY:
+    st.error(
+        "Supabase credentials (SUPABASE_URL and SUPABASE_ANON_KEY) are required to use this app."
+    )
+    st.stop()
+
+
+@st.cache_resource
+def get_supabase_client(url: str, key: str) -> Client:
+    return create_client(url, key)
+
+
+supabase: Client = get_supabase_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+if "auth_user" not in st.session_state:
+    st.session_state["auth_user"] = None
+
+
+def ensure_authenticated() -> None:
+    """Render Supabase login form and block the rest of the app until success."""
+    if st.session_state["auth_user"]:
+        return
+
+    st.header("Restricted Access")
+    st.write("Sign in with your authorized admin account to test the API.")
+
+    with st.form("login_form"):
+        email = st.text_input("Email", placeholder="name@dinger.com")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Sign In")
+
+    if submitted:
+        if not email or not password:
+            st.warning("Please provide both email and password.")
+        else:
+            try:
+                auth_response = supabase.auth.sign_in_with_password(
+                    {"email": email, "password": password}
+                )
+                user_email = getattr(getattr(auth_response, "user", None), "email", email)
+                st.session_state["auth_user"] = {"email": user_email}
+                st.success(f"Signed in as {user_email}")
+                st.rerun()
+            except Exception:
+                st.error("Authentication failed. Please verify your correct credentials.")
+
+    st.stop()
+
+
+def sign_out() -> None:
+    """Sign out the current user and clear any cached UI state."""
+    try:
+        supabase.auth.sign_out()
+    except Exception:
+        pass
+    st.session_state["auth_user"] = None
+    st.session_state.pop("results", None)
+    st.experimental_rerun()
+
+# Image size limit 
 MAX_IMAGE_SIZE = 1024  # px
 REQUEST_TIMEOUT = 60   # seconds
 RETRIES = 2
 
-st.set_page_config(page_title="KYC API Tester", layout="wide")
 st.title("Dinger KYC • API Integration Test")
+
+ensure_authenticated()
+
+with st.sidebar:
+    st.caption(
+        f"Signed in as **{st.session_state['auth_user']['email']}**"
+        if st.session_state["auth_user"]
+        else "Not authenticated"
+    )
+    if st.button("Sign Out"):
+        sign_out()
 
 col1, col2 = st.columns(2)
 
@@ -33,18 +117,18 @@ def call_modal_api(payload):
             return response
         except requests.exceptions.RequestException as e:
             if attempt < RETRIES:
-                time.sleep(3)  # wait before retry
+                time.sleep(3)
             else:
                 raise e
 
 with col1:
-    st.subheader("Client Side (Mobile App)")
+    st.subheader("Client Side")
     uploaded = st.file_uploader("Upload NRC", type=["jpg", "png", "jpeg"])
 
     if uploaded:
         img = Image.open(uploaded).convert("RGB")
 
-        # 🔥 Resize image (CRITICAL for Streamlit Cloud)
+        # Resize image 
         if max(img.size) > MAX_IMAGE_SIZE:
             img.thumbnail((MAX_IMAGE_SIZE, MAX_IMAGE_SIZE))
 
@@ -57,7 +141,7 @@ with col1:
 
             st.write(f"Payload size: {len(payload) / 1024:.1f} KB")
 
-            with st.spinner("Sending request to Modal API..."):
+            with st.spinner("Sending request to API..."):
                 try:
                     response = call_modal_api(payload)
 

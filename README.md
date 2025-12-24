@@ -1,7 +1,7 @@
-# Dinger MMNRC OCR API Tester
+# Official Inference Interface for MMNRC ORC Paper
 
 ## Overview
-This repository hosts a lightweight Streamlit UI used to validate the proprietary Dinger MMNRC OCR model API. It is designed for internal QA and partner handoffs so stakeholders can upload sample NRC images, observe the parsed fields, and review detection overlays without needing access to the underlying model artifacts or backend service code.
+This repository hosts a lightweight UI used to validate the proprietary Dinger MMNRC OCR model API. It is designed for internal QA and partner handoffs so stakeholders can upload sample NRC images, observe the parsed fields, and review detection overlays without needing access to the underlying model artifacts or backend service code.
 
 - **Purpose:** Quickly smoke-test the OCR pipeline end-to-end via HTTPS requests.
 - **Scope:** UI-only. Model weights, preprocessing logic, and post-processing are maintained elsewhere.

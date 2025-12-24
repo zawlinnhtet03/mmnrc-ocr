@@ -45,8 +45,20 @@ def ensure_authenticated() -> None:
     if st.session_state["auth_user"]:
         return
 
+    # st.header("Restricted Access")
+    # st.write("Sign in with your authorized admin account to test the API.")
+    # st.write("For academic verification or reproducibility access,")
+    # st.write("please request test credentials from the author at: zawlinnhtet@dinger.asia, zaw.linn.htet03@gmail.com")
+
     st.header("Restricted Access")
-    st.write("Sign in with your authorized admin account to test the API. To request a demo account, please contact: zaw.linn.htet03@gmail.com")
+    st.write("Sign in with your authorized admin account to test the API.")
+
+    # Use st.info to make this stand out as a "Notice" box
+    st.info(
+        "**Note for Reviewers:** For academic verification or reproducibility access, "
+        "please request test credentials from the author at:\n\n"
+        "📧 `zawlinnhtet@dinger.asia` / `zaw.linn.htet03@gmail.com`"
+    )
 
     with st.form("login_form"):
         email = st.text_input("Email", placeholder="name@dinger.com")

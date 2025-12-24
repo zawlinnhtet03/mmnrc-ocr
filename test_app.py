@@ -46,7 +46,7 @@ def ensure_authenticated() -> None:
         return
 
     st.header("Restricted Access")
-    st.write("Sign in with your authorized admin account to test the API.")
+    st.write("Sign in with your authorized admin account to test the API. To request a demo account, please contact: zaw.linn.htet03@gmail.com")
 
     with st.form("login_form"):
         email = st.text_input("Email", placeholder="name@dinger.com")

@@ -1,1 +1,2 @@
 private
+but sample available at: https://huggingface.co/datasets/PyaeLinn/myNRC-OCR_Sample-Dataset

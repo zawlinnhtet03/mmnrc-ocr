@@ -2,7 +2,7 @@
 
 [🔗 View Official GitHub Repository](https://github.com/zawlinnhtet03/myNRC-OCR)
 
-> **Publication Status:** This paper has been formally accepted to the *Joint International Conference on Computer Science and Software Engineering (JCSSE 2026)*. Official IEEE Xplore proceedings are forthcoming. In the interim, the full accepted author manuscript is available publicly on [ResearchGate](https://www.researchgate.net/publication/402542486_myNRC-OCR_A_Hybrid_OCR_Framework_for_Handwritten_Myanmar_NRCs_Integrating_YOLOv8_Tesseract_LSTM_TrOCR_and_Post-OCR_Correction).
+Link to the paper: https://ieeexplore.ieee.org/document/11597059
 
 myNRC-OCR is a specialized hybrid framework developed for extracting complex handwritten and printed data from Myanmar National Registration Cards (NRCs). Accurate OCR for Myanmar's National Registration Cards (NRCs) is essential for digital KYC but remains challenging due to complex script orthography, handwritten entries, and low-resource data. This project proposes an end-to-end framework integrating object detection, multi-model recognition, and a 3-tier linguistic post-OCR correction module.
 
